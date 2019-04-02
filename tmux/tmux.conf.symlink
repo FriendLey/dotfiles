@@ -34,3 +34,4 @@ bind -r l select-pane -R
 bind -r j select-pane -D
 bind -r k select-pane -U
 
+source-file $HOME/.dotfiles/tmux/solarized.tmuxthem:
