@@ -1,14 +1,23 @@
 #!/bin/bash
 
-root_path="$HOME/Documents"
-dotfiles="$root_path/dotfiles"
+export DOTFILES="$HOME/.dotfiles"
 
-if [[ -d "$dotfiles" ]]; then
-  echo "Symlinking dotfiles from $dotfiles"
+if [[ -d "$DOTFILES" ]]; then
+  echo "Symlinking DOTFILES from $DOTFILES"
 else
-  echo "$dotfiles does not exist"
+  echo "$DOTFILES does not exist"
   exit 1
 fi
+
+
+
+# if ! command_exists zsh; then
+#     echo "zsh not found. Please install and then re-run installation scripts"
+#     exit 1
+# elif ! [[ $SHELL =~ .*zsh.* ]]; then
+#     echo "Configuring zsh as default shell"
+#     chsh -s "$(command -v zsh)"
+# fi
 
 link() {
   from="$1"
@@ -18,7 +27,7 @@ link() {
   ln -s "$from" "$to"
 }
 
-link "$dotfiles/vimrc" "$HOME/.vimrc"
+link "$DOTFILES/vim/vimrc.symlink" "$HOME/.vimrc"
 vim +PlugInstall +qall
-link "$dotfiles/vim/Ultisnips/" "$HOME/.vim/UltiSnips"
-link "$dotfiles/tmux.conf" "$HOME/.tmux.conf"
+link "$DOTFILES/tmux/tmux.conf.symlink" "$HOME/.tmux.conf"
+link "$DOTFILES/zsh/zshrc.symlink" "$HOME/.zshrc"

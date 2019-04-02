@@ -35,12 +35,28 @@ Plug 'jiangmiao/auto-pairs'
 " vim snippets.
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-let g:UltiSnipsExpandTrigger="<c-e>"
-let g:UltiSnipsJumpForwardTrigger="<c-j>"
-let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+let g:UltiSnipsExpandTrigger="<c-j>"
+let g:UltiSnipsJumpForwardTrigger="<c-f>"
+let g:UltiSnipsJumpBackwardTrigger="<c-b>"
 let g:UltiSnipsListSnippets="<c-l>"
 
 " Make sure you use single quotes
+
+Plug 'scrooloose/nerdtree'
+
+" open a NERDTree automatically when vim starts up
+autocmd vimenter * NERDTree
+" open a NERDTree automatically when vim starts up if no files were specified
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" open NERDTree automatically when vim starts up on opening a directory 
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
+" close vim if the only window left open is a NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" map a specific key or shortcut to open NERDTree
+map <C-m> :NERDTreeToggle<CR>
+
 
 " Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
 " Plug 'junegunn/vim-easy-align'
@@ -81,6 +97,8 @@ syntax on
 
 " display line number
 set number
+" display relative line number
+set relativenumber
 
 "set tab & space 4
 set softtabstop=4
@@ -99,8 +117,6 @@ set backspace=2
 " display left column
 set signcolumn=yes
 
-" display relative line number
-set relativenumber
-
 set showmatch
+
 
