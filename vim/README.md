@@ -6,95 +6,11 @@
 brew install macvim
 ```
 
-`~/.zshrc`中添加：
+`zshrc.symlink`中添加：
 
 ```bash
 alias vim='mvim -v'
 ```
-
-
-
-# Vundle（Vim bundle）
-
-在 Vundle 这类插件管理器出现之前，vim 插件都散布在`~/.vim` 下的几个目录中，插件的安装、更新、删除都要自己手动来，即麻烦又容易出现错误。所以 Vundle 这类的插件管理插件应运而生，Vundle 将 git 也整合了进来，用户需要做的只是去 Github 中找到想要的插件地址，安装、更新、卸载都可以由 Vundle 来完成。
-
-## 下载 Vundle
-
-```shell
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-```
-
-## 配置插件
-
-### 配置前的说明
-
-插件有三种类型：
-
-- Github 上 vim-scripts 仓库的插件
-- Github 上非 vim-scripts 仓库的插件
-- 不在Github上的插件
-
-对于上面三种插件类型，Vundle自动管理和下载插件的时候，有不同的地址填写方法：
-
-- 在 Github 上 vim-scripts 用户下的仓库,只需要写出`repo_name`
-- 在 Github 其他用户下的 repos , 需要写出`"username/repo_name"`
-- 不在 Github 上的插件，需要写出 git 全路径
-
-### 配置示例及说明
-
-所有的配置在`~/.vimrc`中完成。如下代码所示。以后安装新插件就直接编辑`~/.vimrc`，添加plugin就行了。
-
-```cpp
-set nocompatible              " be iMproved, required
-filetype off                  " required
-
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
-
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-
-" The following are examples of different formats supported.
-" Keep Plugin commands between vundle#begin/end.
-" plugin on GitHub repo
-Plugin 'tpope/vim-fugitive'
-" plugin from http://vim-scripts.org/vim/scripts.html
-" Plugin 'L9'
-" Git plugin not hosted on GitHub
-Plugin 'git://git.wincent.com/command-t.git'
-" git repos on your local machine (i.e. when working on your own plugin)
-Plugin 'file:///home/gmarik/path/to/plugin'
-" The sparkup vim script is in a subdirectory of this repo called vim.
-" Pass the path to set the runtimepath properly.
-Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
-" Install L9 and avoid a Naming conflict if you've already installed a
-" different version somewhere else.
-" Plugin 'ascenator/L9', {'name': 'newL9'}
-
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
-```
-
-## 卸载插件
-
-将不用的插件在`~/.vimrc`中注释掉，然后打开vim执行`:PluginClean`即可。
-
-或者直接命令行执行：`vim +PluginClean +qall`
 
 # vim-plugin
 
@@ -157,6 +73,18 @@ call plug#begin('~/.vim/plugged')
 " Initialize plugin system
 call plug#end()
 ```
+
+插件有三种类型：
+
+- Github 上 vim-scripts 仓库的插件
+- Github 上非 vim-scripts 仓库的插件
+- 不在Github上的插件
+
+对于上面三种插件类型，vim-plugin自动管理和下载插件的时候，有不同的地址填写方法：
+
+- 在 Github 上 vim-scripts 用户下的仓库,只需要写出`repo_name`
+- 在 Github 其他用户下的 repos , 需要写出`"username/repo_name"`
+- 不在 Github 上的插件，需要写出 git 全路径
 
 ## 安装插件
 
@@ -271,9 +199,7 @@ nnoremap <silent> <F9> :AsyncRun gcc -Wall -O2 "$(VIM_FILEPATH)" -o "$(VIM_FILED
 nnoremap <silent> <F5> :AsyncRun -raw -cwd=$(VIM_FILEDIR) "$(VIM_FILEDIR)/$(VIM_FILENOEXT)" <cr>
 ```
 
-少用 **CTRL-]** 直接在当前窗口里跳转到定义，多使用 **CTRL-W ]** 用新窗口打开并查看光标下符号的定义，或者 **CTRL-W }** 使用 preview 窗口预览光标下符号的定义。
-
-
+使用 **CTRL-]** 直接在当前窗口里跳转到定义，多使用 **CTRL-W ]** 用新窗口打开并查看光标下符号的定义，或者 **CTRL-W }** 使用 preview 窗口预览光标下符号的定义。
 
 
 
@@ -282,11 +208,16 @@ nnoremap <silent> <F5> :AsyncRun -raw -cwd=$(VIM_FILEDIR) "$(VIM_FILEDIR)/$(VIM_
 ## 自带配置
 
 ```c
+" close compatible mode which is for vi.
+set nocompatible
+
 " set syntax highlight on
 syntax on
 
 " display line number
 set number
+" display relative line number
+set relativenumber
 
 "set tab & space 4
 set softtabstop=4
@@ -299,6 +230,16 @@ autocmd InsertEnter * set cul
 " in editor mod. display current cursor's status, display at buttom right.
 set ruler
 
+" more powerful backspace
+set backspace=2
+
+" display left column
+set signcolumn=yes
+
+set showmatch
+
+" enable mouse to locate and move in vim windows
+set mouse=a
 ```
 
 ## C++语法检查
@@ -320,6 +261,43 @@ Plug 'mhinz/vim-signify'
 ```
 
 在侧边栏显示修改情况（对比的是当前文件和 git/svn 仓库里的文件），比`git diff`好看多了。
+
+##目录树
+
+```bash
+Plug 'scrooloose/nerdtree'
+
+" open a NERDTree automatically when vim starts up
+autocmd vimenter * NERDTree
+" open a NERDTree automatically when vim starts up if no files were specified
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" open NERDTree automatically when vim starts up on opening a directory 
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
+" close vim if the only window left open is a NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" map a specific key or shortcut to open NERDTree
+map <C-m> :NERDTreeToggle<CR>
+```
+
+鼠标在目录列表中的相关操作：
+
+- 打开/关闭目录： `o`或者`<Enter>`
+
+- 新建目录/文件：`ma`
+- 删除目录/文件：`md`
+- 在已有窗口中打开文件并跳至该窗口：`o`
+- 在已有窗口中打开文件但不跳至该窗口：`go`
+- 水平新建新窗口打开文件且跳转至该窗口：`i`
+- 水平新建新窗口打开文件但不跳转至该窗口：`gi`
+- 竖直新建新窗口打开文件且跳转至该窗口：`s`
+- 竖直新建新窗口打开文件但不跳转至该窗口：`gs`
+
+窗口之间的移动操作：
+
+- 移动到左侧树形目录：`ctrl + w + h`
+- 移动到右侧文件显示窗口：`ctrl + w + l`
 
 ## 代码补全
 
@@ -426,20 +404,9 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 ```
 
-但是这样，tab会与ycm插件冲突。所以做如下设置：
-
-```bash
-let g:UltiSnipsExpandTrigger="<c-e>"
-let g:UltiSnipsListSnippets="<c-l>"
-```
-
-这样就可以使用`ctrl-e`来做代码块补全配置。
-
 ### 自定义自己的代码块
 
 在`.vimrc`中新建一个目录：`UltiSnips`，如果想要添加cpp文件的snippet，那么在此目录下新建`cpp.snippets`，然后写自己的代码块。
-
-
 
  # 问题及解决办法
 

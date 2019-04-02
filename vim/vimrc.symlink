@@ -45,7 +45,7 @@ let g:UltiSnipsListSnippets="<c-l>"
 Plug 'scrooloose/nerdtree'
 
 " open a NERDTree automatically when vim starts up
-autocmd vimenter * NERDTree
+autocmd VimEnter * NERDTree
 " open a NERDTree automatically when vim starts up if no files were specified
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
@@ -56,6 +56,10 @@ autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 " map a specific key or shortcut to open NERDTree
 map <C-m> :NERDTreeToggle<CR>
+
+" make the curser in file window
+wincmd w
+autocmd VimEnter * wincmd w
 
 
 " Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
@@ -119,4 +123,5 @@ set signcolumn=yes
 
 set showmatch
 
-
+" enable mouse to locate and move in vim windows
+set mouse=a

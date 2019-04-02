@@ -130,11 +130,7 @@ pane的操作一般通过shortcuts来操作
 # ~/.tmux.conf
 
 ```bash
-# for accustom panel/window name.
-set-option -g allow-rename off
 
-# for mouse to scroll up and down.
-set -g mouse on
 ```
 
 注意事项：

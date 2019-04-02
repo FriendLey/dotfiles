@@ -3,6 +3,7 @@ set -g history-limit 20000
 
 # for accustom panel/window name.
 set-option -g allow-rename off
+set -wg automatic-rename off
 
 # for mouse to scroll up and down.
 set -g mouse on
@@ -25,3 +26,11 @@ bind -r H resize-pane -L 2
 bind -r J resize-pane -D 2
 bind -r K resize-pane -U 2
 bind -r L resize-pane -R 2
+
+
+# move to different panes
+bind -r h select-pane -L 
+bind -r l select-pane -R
+bind -r j select-pane -D
+bind -r k select-pane -U
+

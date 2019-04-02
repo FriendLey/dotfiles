@@ -29,5 +29,10 @@ link() {
 
 link "$DOTFILES/vim/vimrc.symlink" "$HOME/.vimrc"
 vim +PlugInstall +qall
+link "$DOTFILES/vim/Ultisnips/" "$HOME/.vim/UltiSnips"
 link "$DOTFILES/tmux/tmux.conf.symlink" "$HOME/.tmux.conf"
 link "$DOTFILES/zsh/zshrc.symlink" "$HOME/.zshrc"
+
+
+
+
