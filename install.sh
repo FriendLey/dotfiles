@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 export DOTFILES="$HOME/.dotfiles"
 
 if [[ -d "$DOTFILES" ]]; then
@@ -9,7 +10,19 @@ else
   exit 1
 fi
 
+# pre install
+if which apt-get >/dev/null; then
+    sudo apt-get install -y vim zsh tmux
+elif which yum >/dev/null; then
+    sudo yum install -y vim zsh tmux
+fi
 
+# Add HomeBrew support on  Mac OS
+if which brew >/dev/null;then
+    export HOMEBREW_NO_AUTO_UPDATE=1
+    echo "You are using HomeBrew tool"
+    brew install vim zsh tmux
+fi
 
 # if ! command_exists zsh; then
 #     echo "zsh not found. Please install and then re-run installation scripts"

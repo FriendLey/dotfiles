@@ -1,141 +1,157 @@
 [TOC]
 
-# tmux
+# tmux 安装
 
-**T**erminal **Mu**ltiple**x**er
-
-![info----server-with-laptop](./imgs/info----server-with-laptop.png)
-
-
-
-# server
-
-开启一个server：
+Installing Tmux on macOS: 
 
 ```shell
-tmux
+brew install tmux
 ```
 
-关闭server：
+Installing Tmux on Ubuntu and Debian: 
 
 ```shell
-tmux kill-server # 关闭server，所有的会话都会关闭
+sudo apt install tmux
 ```
 
-# session
-
-新建一个session：
-
-- `-s`    -- name the session	
+Installing Tmux on CentOS and Fedora: 
 
 ```shell
-tmux # 新建一个无名称的会话
-tmux new -s <session-name> # 新建一个session-name的会话
-tmux new-session -s <session-name> # 新建一个session-name的会话
+sudo yum install tmux
 ```
 
-断开当前session：`ctrl b d`  **[下次还能接着用]**
+# tmux 简介
 
-```shell
-tmux detach # 断开当前会话，会话在后台运行
-```
+Tmux（**T**erminal **Mu**ltiple**x**er）是一个终端复用软件。一个 tmux **server** 包含多个**session**（会话）；每个session包含多个**window**（窗口）；每个window包含多个**pane**（面板）。其结构如下图所示：
 
-进入之前的session：
-
-- `-t`    -- specify target session
-
-```shell
-tmux a # 默认进入第一个会话
-tmux a -t <session-name> # 进入名称为<session-name>的会话
-tmux attack-session -t <session-name> # 进入名称为<session-name>的会话
-```
-
-关闭session：
-
-- `-t`    -- specify target session
-
-```
-tmux kill-session -t <session-name>
-```
-
-# windows
-
-windows的操作一般通过shortcuts来操作
-
-# pane
-
-pane的操作一般通过shortcuts来操作
-
-# shortcuts
-
-- system shortcuts
-
-| Prefix | Shortcuts | description            |
-| ------ | --------- | ---------------------- |
-| Ctrl+b | ?         | List all key bindings. |
-
-- Session shortcuts
-
-| Prefix | Shortcuts | description                                                 |
-| ------ | --------- | ----------------------------------------------------------- |
-| Ctrl+b | d         | Detach the current client.                                  |
-| Ctrl+b | D         | Choose a client to detach.                                  |
-| Ctrl+b | Ctrl+z    | Suspend the tmux client.                                    |
-| Ctrl+b | r         | Force redraw of the attached client.                        |
-| Ctrl+b | s         | Select a new session for the attached client interactively. |
-| Ctrl+b | :         | Enter the tmux command prompt.                              |
-| Ctrl+b | [         | Enter copy mode to copy text or view the history.           |
-| Ctrl+b | ]         | Paste the most recently copied buffer of text.              |
-| Ctrl+b | ~         | Show previous messages from tmux, if any.                   |
-
-- window shortcuts
-
-| Prefix | Shortcuts | Description                                     |
-| ------ | --------- | ----------------------------------------------- |
-| Ctrl+b | c         | Create a new window.                            |
-| Ctrl+b | ,         | Rename the current window.                      |
-| Ctrl+b | p         | Change to the previous window.                  |
-| Ctrl+b | n         | Change to the next window.                      |
-| Ctrl+b | 0 to 9    | Select windows 0 to 9.                          |
-| Ctrl+b | w         | Choose the current window interactively.        |
-| Ctrl+b | .         | Prompt for an index to move the current window. |
-| Ctrl+b | f         | Prompt to search for text in open windows.      |
-| Ctrl+b | &         | Kill the current window.                        |
+![tmux_server_arch](./imgs/tmux_server_arch.png)
 
 
 
-- pane shortcuts
+tmux采用C/S模型构建，输入**tmux**命令就相当于开启了一个服务器，此时默认将新建一个会话，会话中默认新建一个窗口，窗口中默认新建一个面板。接下来就进入了tmux的server内部。在内部，向tmux发出指令时需要使用前缀，tmux默认的前缀是`ctrl b`。之后的操作与vim颇为相似，tmux有两种模式：
 
-| Prefix | Shortcuts                                 | Description                                                  |
-| ------ | ----------------------------------------- | ------------------------------------------------------------ |
-| Ctrl+b | %                                         | Split the current pane into two, left and right.             |
-| Ctrl+b | "                                         | Split the current pane into two, top and bottom.             |
-| Ctrl+b | Ctrl+Up, Ctrl+Down, Ctrl+Left, Ctrl+Right | Resize the current pane in steps of one cell.                |
-| Ctrl+b | Alt+Up, Alt+Down, Alt+Left, Alt+Right     | Resize the current pane in steps of five cells.              |
-| Ctrl+b | Ctrl+o                                    | Rotate the panes in the current window forwards.             |
-| Ctrl+b | Up, Down, Left, Right                     | Change to the pane above, below, to the left, or to the right of the current pane. |
-| Ctrl+b | o                                         | Select the next pane in the current window.                  |
-| Ctrl+b | ;                                         | Move to the previously active pane.                          |
-| Ctrl+b | {                                         | Swap the current pane with the previous pane.                |
-| Ctrl+b | }                                         | Swap the current pane with the next pane.                    |
-| Ctrl+b | z                                         | Toggle zoom state of the current pane.                       |
-| Ctrl+b | !                                         | Break the current pane out of the window.                    |
-| Ctrl+b | x                                         | Kill the current pane.                                       |
-| Ctrl+b | q                                         | Briefly display pane indexes.                                |
-| Ctrl+b | Space                                     | Arrange the current window in the next preset layout.        |
-| Ctrl+b | t                                         | Show the time.                                               |
+- normal模式：使用 `<prefix> + shortcut` 对session，window，pane进行操作
 
+- 命令行模式：使用 `<prefix> + :` 进入命令行模式，之后输入相关命令对session，window，pane进行操作。所有命令行模式的操作都可以在tmux server的外部显式地调用tmux进行操作。比如下面两种新建一个session的操作是等价的：
 
+  ```shell
+  <prefix> : new -s <session-name> # tmux server 内部
+  tmux new -s <session-name> # 在外部终端使用
+  ```
 
-# ~/.tmux.conf
+# tmux 操作
 
-```bash
+## server 
 
-```
+| 命令                     | 描述              |
+| ------------------------ | ----------------- |
+| \<prefix\> : kill-server | 关闭所有会话      |
+| \<prefix\> ?             | 列出所有 bind-key |
 
-注意事项：
+## session
 
-- 使用`set -g mouse on`这个属性可以看到屏幕的历史内容，但是iterm2的选中复制功能没法使用了。解决方法：鼠标选中的时候按住option键 cmd+v可以正常粘贴。
+| 命令                                            | 描述                                       |
+| ----------------------------------------------- | ------------------------------------------ |
+| \<prefix\> : new-session -s \<session-name\>    | 新建名称为session-name的会话 并 进入该会话 |
+| \<prefix\> d<br />\<prefix\> : detach           | 脱离当前会话（还能重新进入该会话）         |
+| \<prefix\> : attach-session -t \<session-name\> | 重新进入名称为session-name的会话           |
+| \<prefix\> s                                    | 列出当前server中的所有会话                 |
+| \<prefix\> $                                    | 重命名当前会话                             |
+| \<prefix\> : kill-session -t \<session-name\>   | 关闭名称为session-name的会话（永久关闭）   |
 
+## window
 
+| 命令             | 描述                         |
+| ---------------- | ---------------------------- |
+| \<prefix\> c     | 新建一个window               |
+| \<prefix\> ,     | 重命名当前window             |
+| \<prefix\> p     | 切换到前一个window           |
+| \<prefix\> n     | 切换到后一个window           |
+| \<prefix\> [0-9] | 选择 window [0-9]            |
+| \<prefix\> w     | 列出当前server中的所有window |
+| \<prefix\> .     | 移动当前window               |
+| <prefix\> f      | 查找window                   |
+| <prefix\> &      | 关闭当前window               |
+
+## pane
+
+| 命令                                                         | 描述                                     |
+| ------------------------------------------------------------ | ---------------------------------------- |
+| <prefix\> %                                                  | 竖直分割当前pane                         |
+| <prefix\> "                                                  | 水平分割当前pane                         |
+| <prefix\> z                                                  | 将当前pane放大到整个window（重复可返回） |
+| \<prefix\> o                                                 | 选择当前window的下一个pane               |
+| <prefix\> [l;]                                               | 选择前一个pane                           |
+| <prefix\> {                                                  | 将当前pane与前一个pane交换               |
+| <prefix\> }                                                  | 将当前pane与后一个pane交换               |
+| <prefix\> \<ctrl\> o                                         | 逆时针旋转当前window的所有pane           |
+| <prefix\> \<ctrl\> O                                         | 顺时针旋转当前window的所有pane           |
+| \<prefix\> t                                                 | 在当前pane显示当前时间                   |
+| \<prefix\> [$\leftarrow \downarrow \uparrow \rightarrow$]    | 移动到[左下右上]的pane                   |
+| \<prefix\> \<ctrl\> [$\leftarrow \downarrow \uparrow \rightarrow$] | 以 1 cell 为单位改变当前pane的大小       |
+| \<prefix\> \<alt\> [$\leftarrow \downarrow \uparrow \rightarrow$] | 以 5 cell 为单位改变当前pane的大小       |
+| \<prefix\> !                                                 | 新建一个窗口，并将当前pane移动过去       |
+| \<prefix\> p                                                 | 显示当前window的各个pane的序号           |
+| \<prefix\> \<space\>                                         | 重新对当前window的各个pane进行排版       |
+| \<prefix\> x                                                 | 关闭当前pane                             |
+
+# tmux 配置
+
+- 添加 \<ctrl\> a 前缀
+
+  ```shell
+  set -g prefix2 C-a                        # GNU-Screen compatible prefix
+  bind C-a send-prefix -2
+  ```
+
+  配置之后，`ctrl a` 和 `ctrl b` 均为前缀
+
+- 激活鼠标滚动
+
+  ```shell
+  set -g mouse on
+  ```
+
+- 设置 `<prefix> r` 热更新当前运行的tmux server的配置
+
+  ```shell
+  bind r source-file ~/.tmux.conf \; display "Config Reloaded!"
+  ```
+
+  修改配置文件后，可以直接tmux内部 `<prefix> r` 更新当前tmux server的配置
+
+- 设置`<prefix> [-|]` 水平竖直分割pane
+
+  ```shell
+  # split window and fix path for tmux 1.9
+  bind | split-window -h -c "#{pane_current_path}"
+  bind - split-window -v -c "#{pane_current_path}"
+  ```
+
+- 设置 `<prefix> y` 同步操作所有pane
+
+  ```shell
+  # synchronize all panes in a window
+  bind y setw synchronize-panes
+  ```
+
+- 设置 `<prefix> [HJKL]` 改变pane的大小
+
+  ```shell
+  # Resize pane shortcuts
+  bind -r H resize-pane -L 2
+  bind -r J resize-pane -D 2
+  bind -r K resize-pane -U 2
+  bind -r L resize-pane -R 2
+  ```
+
+- 设置 `<prefix> [hjkl]` 在当前window的不同pane之间移动
+
+  ```shell
+  # move to different panes
+  bind -r h select-pane -L 
+  bind -r l select-pane -R
+  bind -r j select-pane -D
+  bind -r k select-pane -U
+  ```
 

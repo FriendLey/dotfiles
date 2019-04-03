@@ -1,3 +1,6 @@
+source-file $HOME/.dotfiles/tmux/solarized.tmuxtheme
+
+set -g default-terminal "screen-256color"
 
 set -g history-limit 20000
 
@@ -34,4 +37,4 @@ bind -r l select-pane -R
 bind -r j select-pane -D
 bind -r k select-pane -U
 
-source-file $HOME/.dotfiles/tmux/solarized.tmuxtheme
+
