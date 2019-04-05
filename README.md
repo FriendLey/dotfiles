@@ -4,7 +4,7 @@
 git clone https://github.com/FriendLey/dotfiles.git ~/.dotfiles
 ```
 
-Then,
+使用4.3及以后的版本执行`install.sh`
 
 ```shell
 ./install.sh

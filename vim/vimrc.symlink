@@ -15,19 +15,19 @@ Plug 'w0rp/ale'
 " Show diff between current and git repo.
 Plug 'mhinz/vim-signify'
 
-" Plug 'Valloric/YouCompleteMe'
-" let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
-" " auto complete pane's color.
-" highlight PMenu ctermfg=0 ctermbg=242 guifg=black guibg=darkgrey
-" highlight PMenuSel ctermfg=242 ctermbg=8 guifg=darkgrey guibg=black
-" " close function prototype when autocomplete.
-" set completeopt=menu,menuone
-" let g:ycm_add_preview_to_completeopt = 0
-" " input 2 letters will trigger complete automaticly.
-" let g:ycm_semantic_triggers =  {
-"             \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
-"             \ 'cs,lua,javascript': ['re!\w{2}'],
-"             \ }
+Plug 'Valloric/YouCompleteMe'
+let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
+" auto complete pane's color.
+highlight PMenu ctermfg=0 ctermbg=242 guifg=black guibg=darkgrey
+highlight PMenuSel ctermfg=242 ctermbg=8 guifg=darkgrey guibg=black
+" close function prototype when autocomplete.
+set completeopt=menu,menuone
+let g:ycm_add_preview_to_completeopt = 0
+" input 2 letters will trigger complete automaticly.
+let g:ycm_semantic_triggers =  {
+            \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
+            \ 'cs,lua,javascript': ['re!\w{2}'],
+            \ }
 
 " Insert or delete brackets, parens, quotes in pair.
 Plug 'jiangmiao/auto-pairs'
@@ -141,3 +141,22 @@ set wildmenu
 " now we can hit tab to :find by partial match &
 " use * to make it fuzzy
 
+" remap copy file to system clipboard
+nmap <F3> gg"+yG
+
+" map F5
+map <F5> :call CompileRunGcc()<CR>
+func! CompileRunGcc()
+    exec "w" 
+    if &filetype == 'c' 
+        exec '!g++ % -o %<'
+        exec '!time ./%<'
+    elseif &filetype == 'cpp'
+        exec '!g++ % -o %<'
+        exec '!time ./%<'
+    elseif &filetype == 'python'
+        exec '!time python %'
+    elseif &filetype == 'sh'
+        :!time bash %
+    endif                                                                              
+endfunc 
