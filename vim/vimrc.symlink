@@ -15,19 +15,19 @@ Plug 'w0rp/ale'
 " Show diff between current and git repo.
 Plug 'mhinz/vim-signify'
 
-Plug 'Valloric/YouCompleteMe'
-let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
-" auto complete pane's color.
-highlight PMenu ctermfg=0 ctermbg=242 guifg=black guibg=darkgrey
-highlight PMenuSel ctermfg=242 ctermbg=8 guifg=darkgrey guibg=black
-" close function prototype when autocomplete.
-set completeopt=menu,menuone
-let g:ycm_add_preview_to_completeopt = 0
-" input 2 letters will trigger complete automaticly.
-let g:ycm_semantic_triggers =  {
-            \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
-            \ 'cs,lua,javascript': ['re!\w{2}'],
-            \ }
+" Plug 'Valloric/YouCompleteMe'
+" let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
+" " auto complete pane's color.
+" highlight PMenu ctermfg=0 ctermbg=242 guifg=black guibg=darkgrey
+" highlight PMenuSel ctermfg=242 ctermbg=8 guifg=darkgrey guibg=black
+" " close function prototype when autocomplete.
+" set completeopt=menu,menuone
+" let g:ycm_add_preview_to_completeopt = 0
+" " input 2 letters will trigger complete automaticly.
+" let g:ycm_semantic_triggers =  {
+"             \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
+"             \ 'cs,lua,javascript': ['re!\w{2}'],
+"             \ }
 
 " Insert or delete brackets, parens, quotes in pair.
 Plug 'jiangmiao/auto-pairs'
@@ -42,8 +42,14 @@ let g:UltiSnipsListSnippets="<c-l>"
 
 " Make sure you use single quotes
 
-Plug 'scrooloose/nerdtree'
+""" python indentLine
+Plug 'Yggdroot/indentLine'
+let g:indentLine_color_term = 239
+let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 
+
+"" nerdtree
+Plug 'scrooloose/nerdtree'
 " open a NERDTree automatically when vim starts up
 autocmd VimEnter * NERDTree
 " open a NERDTree automatically when vim starts up if no files were specified
@@ -56,11 +62,48 @@ autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 " map a specific key or shortcut to open NERDTree
 map <C-m> :NERDTreeToggle<CR>
-
 " make the curser in file window
 wincmd w
 autocmd VimEnter * wincmd w
 
+
+"""" vim-gutentags
+Plug 'ludovicchabant/vim-gutentags'
+" how Gutentags figures out the project a file belongs to
+let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
+
+""" ctags & gtags
+let g:gutentags_modules = []
+if executable('ctags')
+    let g:gutentags_modules += ['ctags']
+endif
+if executable('gtags-cscope') && executable('gtags')
+    let g:gutentags_modules += ['gtags_cscope']
+endif
+
+"" ctags
+set tags=./.tags;,.tags
+" Specifies the name of the tag file to create. This will be appended to the project's root.
+let g:gutentags_ctags_tagfile = '.tags'
+" A list of arguments to pass to `ctags`, Defaults to `[]`.
+let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
+let g:gutentags_ctags_extra_args += ['--output-format=e-ctags'] " if you use universal ctags
+" let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
+" let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+
+"" gtags
+let g:gutentags_auto_add_gtags_cscope = 0
+" If built-in parser exists for the target, it is used. Else if pygments parser exists it is used.
+" built-in parser includes: C, C++, yacc, java, PHP and Assembly source files.
+let $GTAGSLABEL = 'native-pygments'
+" let $GTAGSCONF = '/usr/local/share/gtags/gtags.conf'
+" Specifies a directory in which to create all the tags files, instead of writing them at the root of each
+" project. This is handy to keep tags files from polluting many directories all across your computer.
+let s:vim_tags = expand('~/.cache/tags')
+if !isdirectory(s:vim_tags)
+   silent! call mkdir(s:vim_tags, 'p')
+endif
+let g:gutentags_cache_dir = s:vim_tags
 
 " Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
 " Plug 'junegunn/vim-easy-align'
@@ -160,3 +203,4 @@ func! CompileRunGcc()
         :!time bash %
     endif                                                                              
 endfunc 
+

@@ -11,6 +11,8 @@ fi
 
 # pre install
 if which apt-get >/dev/null; then
+    sudo add-apt-repository ppa:jonathonf/vim
+    sudo apt-get update
     sudo apt-get install -y vim zsh tmux
 elif which yum >/dev/null; then
     sudo yum install -y vim zsh tmux
@@ -53,11 +55,11 @@ elif ! [[ $SHELL =~ .*zsh.* ]]; then
 fi
 
 link() {
-  from="$1"
-  to="$2"
-  echo "Linking '$from' to '$to'"
-  rm -f "$to"
-  ln -s "$from" "$to"
+    from="$1"
+    to="$2"
+    echo "Linking '$from' to '$to'"
+    rm -f "$to"
+    ln -s "$from" "$to"
 }
 
 link "$DOTFILES/vim/vimrc.symlink" "$HOME/.vimrc"
@@ -65,7 +67,4 @@ vim +PlugInstall +qall
 link "$DOTFILES/vim/Ultisnips/" "$HOME/.vim/UltiSnips"
 link "$DOTFILES/tmux/tmux.conf.symlink" "$HOME/.tmux.conf"
 link "$DOTFILES/zsh/zshrc.symlink" "$HOME/.zshrc"
-
-
-
-
+link "$DOTFILES/gtags/gtags.conf" "$HOME/.globalrc"

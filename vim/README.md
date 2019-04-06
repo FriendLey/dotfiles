@@ -1,17 +1,5 @@
 [TOC]
 
-# 安装macvim
-
-```bash
-brew install macvim
-```
-
-`zshrc.symlink`中添加：
-
-```bash
-alias vim='mvim -v'
-```
-
 # vim-plugin
 
 ## pros
@@ -74,13 +62,7 @@ call plug#begin('~/.vim/plugged')
 call plug#end()
 ```
 
-插件有三种类型：
-
-- Github 上 vim-scripts 仓库的插件
-- Github 上非 vim-scripts 仓库的插件
-- 不在Github上的插件
-
-对于上面三种插件类型，vim-plugin自动管理和下载插件的时候，有不同的地址填写方法：
+对于如下三种插件类型，vim-plugin自动管理和下载插件的时候，有不同的地址填写方法：
 
 - 在 Github 上 vim-scripts 用户下的仓库,只需要写出`repo_name`
 - 在 Github 其他用户下的 repos , 需要写出`"username/repo_name"`
@@ -88,7 +70,7 @@ call plug#end()
 
 ## 安装插件
 
-接下来每次在`~/.vim.conf`新增插件之后，安装插件：
+每次在新增插件之后，使用如下命令安装插件：
 
 ```bash
 vim +PlugInstall +qall
@@ -96,7 +78,7 @@ vim +PlugInstall +qall
 
 ## 删除插件
 
-在`~/.vimrc`中将要删除的插件删掉，然后命令行运行：
+在配置文件中将要删除的插件删掉，然后命令行运行：
 
 ```
 vim +PlugClean +qall
@@ -104,143 +86,7 @@ vim +PlugClean +qall
 
 
 
-# gtags
-
-## 安装
-
-gtags 不是vim插件，是一个独立的软件，他来替代ctags和cscope。
-
-mac 安装 gtags：
-
-```bash
-➜  ~ brew info global
-global: stable 6.6.2 (bottled), HEAD
-Source code tag system
-https://www.gnu.org/software/global/
-Not installed
-From: https://github.com/Homebrew/homebrew-core/blob/master/Formula/global.rb
-==> Dependencies
-Required: python@2 ✘
-Optional: ctags ✔
-==> Options
---with-ctags
-        Enable Exuberant Ctags as a plug-in parser
---with-pygments
-        Enable Pygments as a plug-in parser (should enable exuberant-ctags too)
---with-sqlite3
-        Use SQLite3 API instead of BSD/DB API for making tag files
---HEAD
-        Install HEAD version
-➜  ~ brew install global
-```
-
-只写 C/C++/Java 的话，那么到这里就够了，gtags 原生支持。如想要更多语言，那么 gtags 是支持使用 ctags/universal-ctags 或者 pygments 来作为分析前端支持 50+ 种语言。使用 ctags/universal-ctags 作为前端只能生成定义索引不能生成引用索引，因此我们要安装 pygments ，保证你的 $PATH 里面有 python，接着：
-
-```bash
-pip install pygments
-```
-
-保证 Vim 里要设置过两个环境变量才能正常工作：
-
-```
-let $GTAGSLABEL = 'native-pygments'
-let $GTAGSCONF = '/path/to/share/gtags/gtags.conf'
-```
-
-第一个 GTAGSLABEL 告诉 gtags 默认 C/C++/Java 等六种原生支持的代码直接使用 gtags 本地分析器，而其他语言使用 pygments 模块。
-
-第二个环境变量必须设置，否则会找不到 native-pygments 和 language map 的定义， Windows 下面在 gtags/share/gtags/gtags.conf，Linux 下要到 /usr/local/share/gtags 里找，也可以把它拷贝成 ~/.globalrc ，Vim 配置的时候方便点。
-
-## 【TODO】自动索引
-
-安装两个插件：
-
-```c
-Plug 'ludovicchabant/vim-gutentags'
-Plug 'skywind3000/gutentags_plus'
-```
-
-并做如下配置：
-
-```c
-" Plug 'ludovicchabant/vim-gutentags'
-" Plug 'skywind3000/gutentags_plus'
-" gutentags 搜索工程目录的标志，碰到这些文件/目录名就停止向上一级目录递归
-let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
-
-" 所生成的数据文件的名称
-let g:gutentags_ctags_tagfile = '.tags'
-
-" 将自动生成的 tags 文件全部放入 ~/.cache/tags 目录中，避免污染工程目录
-let s:vim_tags = expand('~/.cache/tags')
-let g:gutentags_cache_dir = s:vim_tags
-
-" 配置 ctags 的参数
-let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
-let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
-let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
-
-" 检测 ~/.cache/tags 不存在就新建
-if !isdirectory(s:vim_tags)
-   silent! call mkdir(s:vim_tags, 'p')
-   endif
-
-" 自动打开 quickfix window ，高度为 6
-let g:asyncrun_open = 6
-
-" 任务结束时候响铃提醒
-let g:asyncrun_bell = 1
-
-" 设置 F10 打开/关闭 Quickfix 窗口
-nnoremap <F10> :call asyncrun#quickfix_toggle(6)<cr>
-" 设置 F9 编译单个文件
-nnoremap <silent> <F9> :AsyncRun gcc -Wall -O2 "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/$(VIM_FILENOEXT)" <cr>
-" 设置 F5 运行此文件
-nnoremap <silent> <F5> :AsyncRun -raw -cwd=$(VIM_FILEDIR) "$(VIM_FILEDIR)/$(VIM_FILENOEXT)" <cr>
-```
-
-使用 **CTRL-]** 直接在当前窗口里跳转到定义，多使用 **CTRL-W ]** 用新窗口打开并查看光标下符号的定义，或者 **CTRL-W }** 使用 preview 窗口预览光标下符号的定义。
-
-
-
 # vim 配置
-
-## 自带配置
-
-```c
-" close compatible mode which is for vi.
-set nocompatible
-
-" set syntax highlight on
-syntax on
-
-" display line number
-set number
-" display relative line number
-set relativenumber
-
-"set tab & space 4
-set softtabstop=4
-set shiftwidth=4
-
-" use shallow color mark current line.
-autocmd InsertLeave * set nocul
-autocmd InsertEnter * set cul
-
-" in editor mod. display current cursor's status, display at buttom right.
-set ruler
-
-" more powerful backspace
-set backspace=2
-
-" display left column
-set signcolumn=yes
-
-set showmatch
-
-" enable mouse to locate and move in vim windows
-set mouse=a
-```
 
 ## C++语法检查
 
@@ -303,9 +149,9 @@ map <C-m> :NERDTreeToggle<CR>
 
 ### YouCompleteMe安装过程
 
-$\textcolor{Blue}{这里不能使用anaconda的python，必须使用自带的python或者自带的python3。}$
+$\textcolor{Blue}{这里不能使用anaconda的python，必须使用自带的python或者自带的python3。}​$
 
-$\textcolor{Blue}{具体是python还是python3使用vim --version查看支持的是哪一个版本。}$
+$\textcolor{Blue}{具体是python还是python3使用vim --version查看支持的是哪一个版本。}​$
 
 - Install the latest version of MacVim. Yes, MacVim. And yes, the latest.
 
@@ -407,24 +253,6 @@ Plug 'honza/vim-snippets'
 ### 自定义自己的代码块
 
 在`.vimrc`中新建一个目录：`UltiSnips`，如果想要添加cpp文件的snippet，那么在此目录下新建`cpp.snippets`，然后写自己的代码块。
-
- # 问题及解决办法
-
-## dyld: Library not loaded
-
-```bash
-dyld: Library not loaded: /usr/local/opt/perl/lib/perl5/5.24.0/darwin-thread-multi-2level/CORE/libperl.dylib
-  Referenced from: /usr/local/bin/vim
-  Reason: image not found
-[1]    44267 abort      vim
-```
-
-解决办法：
-
-```bash
-$ brew uninstall vim
-$ brew install --with-luajit vim
-```
 
 
 
