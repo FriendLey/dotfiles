@@ -95,12 +95,12 @@ tmux采用C/S模型构建，输入**tmux**命令就相当于开启了一个服�
 | \<prefix\> \<space\>                                         | 重新对当前window的各个pane进行排版       |
 | \<prefix\> x                                                 | 关闭当前pane                             |
 
-# tmux 配置
+# tmux 快捷键配置
 
 - 添加 \<ctrl\> a 前缀
 
   ```shell
-  set -g prefix2 C-a                        # GNU-Screen compatible prefix
+  set -g prefix2 C-a
   bind C-a send-prefix -2
   ```
 
@@ -123,7 +123,6 @@ tmux采用C/S模型构建，输入**tmux**命令就相当于开启了一个服�
 - 设置`<prefix> [-|]` 水平竖直分割pane
 
   ```shell
-  # split window and fix path for tmux 1.9
   bind | split-window -h -c "#{pane_current_path}"
   bind - split-window -v -c "#{pane_current_path}"
   ```
@@ -131,14 +130,12 @@ tmux采用C/S模型构建，输入**tmux**命令就相当于开启了一个服�
 - 设置 `<prefix> y` 同步操作所有pane
 
   ```shell
-  # synchronize all panes in a window
   bind y setw synchronize-panes
   ```
 
 - 设置 `<prefix> [HJKL]` 改变pane的大小
 
   ```shell
-  # Resize pane shortcuts
   bind -r H resize-pane -L 2
   bind -r J resize-pane -D 2
   bind -r K resize-pane -U 2
@@ -148,10 +145,44 @@ tmux采用C/S模型构建，输入**tmux**命令就相当于开启了一个服�
 - 设置 `<prefix> [hjkl]` 在当前window的不同pane之间移动
 
   ```shell
-  # move to different panes
   bind -r h select-pane -L 
   bind -r l select-pane -R
   bind -r j select-pane -D
   bind -r k select-pane -U
   ```
+
+- 设置 `<prefix> C-c` 创建新的session
+
+  ```shell
+  bind C-c new-session
+  ```
+
+- 设置 `<prefix> C-f` 查找并切换到某个session
+
+  ```shell
+  bind C-f command-prompt -p find-session 'switch-client -t %%'
+  ```
+
+- 设置 `<prefix> C-l` 清空当前pane的屏幕及历史
+
+  ```shell
+  bind -n C-l send-keys C-l \; run 'sleep 0.1' \; clear-history
+  ```
+
+# tmux 状态栏设置
+
+在此dotfiles里包含两个状态栏设置（tmux.conf.symlink文件里）：
+
+```shell
+source-file $HOME/.dotfiles/tmux/solarized.tmuxstatusline
+# source-file $HOME/.dotfiles/tmux/powerlinelike.tmuxstatusline
+```
+
+solarized 主题：
+
+![tmux_theme_solarized](./imgs/tmux_statusline_solarized.png)
+
+powerline-like主题（需要 [powerline-font](https://github.com/powerline/fonts)）：
+
+![tmux_statusline_powerlinelike](./imgs/tmux_statusline_powerlinelike.png)
 

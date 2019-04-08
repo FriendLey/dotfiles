@@ -1,5 +1,3 @@
-source-file $HOME/.dotfiles/tmux/solarized.tmuxtheme
-
 set -g default-terminal "screen-256color"
 
 set -g history-limit 20000
@@ -7,6 +5,8 @@ set -g history-limit 20000
 # for accustom panel/window name.
 set-option -g allow-rename off
 set -wg automatic-rename off
+# renumber windows when a window is closed
+set -g renumber-windows on
 
 # for mouse to scroll up and down.
 set -g mouse on
@@ -30,11 +30,24 @@ bind -r J resize-pane -D 2
 bind -r K resize-pane -U 2
 bind -r L resize-pane -R 2
 
-
 # move to different panes
 bind -r h select-pane -L 
 bind -r l select-pane -R
 bind -r j select-pane -D
 bind -r k select-pane -U
 
+# create session
+bind C-c new-session
 
+# find session
+bind C-f command-prompt -p find-session 'switch-client -t %%'
+
+# clear both screen and history of current pane.
+bind -n C-l send-keys C-l \; run 'sleep 0.1' \; clear-history
+
+# set terminal title
+set -g set-titles on
+set -g set-titles-string '#h ❐ #S ● #I #W'
+
+source-file $HOME/.dotfiles/tmux/solarized.tmuxstatusline
+# source-file $HOME/.dotfiles/tmux/powerlinelike.tmuxstatusline

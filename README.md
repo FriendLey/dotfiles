@@ -1,4 +1,6 @@
-# dotfiles
+![](./imgs/zsh_tmux_vim_screenshot.png)
+
+# dotfiles for Mac
 
 ```bash
 git clone https://github.com/FriendLey/dotfiles.git ~/.dotfiles
@@ -11,6 +13,10 @@ git clone https://github.com/FriendLey/dotfiles.git ~/.dotfiles
 ```
 
 # 索引
+
+## 安装ctags和gtags
+
+### mac
 
 [Install ctags](http://docs.ctags.io/en/latest/building.html)
 
@@ -27,7 +33,27 @@ $ brew install global
 $ pip install pygments
 ```
 
-安装vim-guntentags插件及相关配置如下：
+### ubuntu
+
+Install ctags
+
+```shell
+$ git clone https://github.com/universal-ctags/ctags.git
+$ cd ctags
+$ ./autogen.sh
+$ ./configure
+$ make
+$ make install
+```
+
+Install gtags
+
+```shell
+$ sudo apt install global
+$ pip install pygments
+```
+
+安装vim-guntentags插件自动索引，相关配置如下：
 
 ```shell
 " vim-gutentags
@@ -54,5 +80,5 @@ let g:gutentags_cache_dir = s:vim_tags
 
 `set tags=./.tags;,.tags`： tag 文件的名字从 "tags" 换成了 ".tags" ，前面多加了一个点，避免污染项目文件。 `./.tags;` 表示在文件所在目录下查找名字为 ".tags" 的符号文件，`;`代表查找不到的话向上递归到父目录，直到找到 .tags 文件或者递归到了根目录还没找到。`,.tags` 表示同时在vim的当前目录下面查找".tags"文件。
 
-# 自动补全
+
 

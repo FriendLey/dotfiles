@@ -1,8 +1,76 @@
 [TOC]
 
-# vim-plugin
+# 非插件配置
 
-## pros
+- 设置支持模糊查找子文件
+
+  ```shell
+  " Provides tab-completion for all file-related tasks
+  set path+=**
+  " Display all matching files when we tab complete
+  set wildmenu
+  ```
+
+  接下来可以使用 `:find` 查找相关文件，支持 `*` 模糊匹配，`tab` 显示所有可能的结果
+
+  ![vim_fuzzy_find](./imgs/vim_fuzzy_find.png)
+
+- 映射 `<F3>` 复制当前文件内所有内容到系统粘贴板
+
+  ```shell
+  nmap <F3> gg"+yG
+  ```
+
+- 进入插入模式时会在鼠标所在的当前行显示下划线，退出插入模式时取消下划线
+
+  ```shell
+  autocmd InsertLeave * set nocul
+  autocmd InsertEnter * set cul
+  ```
+
+  ![vim_insert_cul](./imgs/vim_insert_cul.png)
+
+- 设置tab和自动缩进显示为四个空格，并将tab用4个空格代替
+
+  ```shell
+  set tabstop=4 " Show existing tab with 4 spaces width
+  set shiftwidth=4 " When indenting with '>', use 4 spaces width
+  set expandtab " On pressing tab, insert 4 spaces.
+  ```
+
+- 设置显示当前行的绝对行号及其它行的相对行号
+
+  ```shell
+  set number " display line number
+  set relativenumber " display relative line number
+  ```
+
+- 激活鼠标
+
+  ```shell
+  set mouse=a
+  ```
+
+- 设置编码方式
+
+  ```shell
+  " Vim will try these encodings when open a file
+  set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936 
+  " Defines how your keyboard encodes what you type
+  set termencoding=utf-8 
+  " Sets how vim shall represent characters internally
+  set encoding=utf-8 
+  ```
+
+- ddd
+
+# 插件配置
+
+## vim-plug
+
+vundle已经不更新了，本dotfiles使用vim-plug。
+
+### pros
 
 - Easier to setup: Single file. No boilerplate code required.
 - Easier to use: Concise, intuitive syntax
@@ -14,7 +82,7 @@
 - Post-update hooks
 - Support for externally managed plugins
 
-## 使用方式
+### 使用方式
 
 ```c
 if empty(glob('~/.vim/autoload/plug.vim'))
@@ -68,7 +136,7 @@ call plug#end()
 - 在 Github 其他用户下的 repos , 需要写出`"username/repo_name"`
 - 不在 Github 上的插件，需要写出 git 全路径
 
-## 安装插件
+### 安装插件
 
 每次在新增插件之后，使用如下命令安装插件：
 
@@ -76,17 +144,13 @@ call plug#end()
 vim +PlugInstall +qall
 ```
 
-## 删除插件
+### 删除插件
 
 在配置文件中将要删除的插件删掉，然后命令行运行：
 
 ```
 vim +PlugClean +qall
 ```
-
-
-
-# vim 配置
 
 ## C++语法检查
 
@@ -108,7 +172,7 @@ Plug 'mhinz/vim-signify'
 
 在侧边栏显示修改情况（对比的是当前文件和 git/svn 仓库里的文件），比`git diff`好看多了。
 
-##目录树
+## 目录树
 
 ```bash
 Plug 'scrooloose/nerdtree'
@@ -162,7 +226,6 @@ Plug 'Valloric/YouCompleteMe'
 ```
 
 - Compiling YCM **with** semantic support for C-family languages and go language.
-  - 这里翻墙会变慢
 
 ```bash
 cd ~/.vim/plugged/YouCompleteMe/
