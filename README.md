@@ -1,15 +1,16 @@
 ![](./imgs/zsh_tmux_vim_screenshot.png)
 
-# dotfiles for Mac
+# Prerequisites
+
+- bash ( >= 4.3 )
+- vim ( >= 8.0 )
+
+# Installation
 
 ```bash
-git clone https://github.com/FriendLey/dotfiles.git ~/.dotfiles
-```
-
-使用4.3及以后版本的bash 执行`install.sh`
-
-```shell
-./install.sh
+$ git clone https://github.com/FriendLey/dotfiles.git ~/.dotfiles
+$ cd ~/.dotfiles
+$ ./install.sh
 ```
 
 # 索引

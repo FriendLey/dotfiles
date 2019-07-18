@@ -14,9 +14,9 @@ set shiftwidth=4 " When indenting with '>', use 4 spaces width
 set expandtab " On pressing tab, insert 4 spaces.
 
 
-" use shallow color mark current line.
-autocmd InsertLeave * set nocul
-autocmd InsertEnter * set cul
+" use shallow color mark current line and column.
+autocmd InsertLeave * set nocul nocuc
+autocmd InsertEnter * set cul cuc
 
 " more powerful backspace
 set backspace=2
@@ -29,8 +29,12 @@ set showmatch
 " enable mouse to locate and move in vim windows
 set mouse=a
 
+" list chars
+" set listchars+=eol:$,tab:>-,trail:~,extends:>,precedes:<,space:·
+" set list
+
 " Encodings
-set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936 " Vim will try these encodings when open a file
+set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936,big5,euc-jp,euc-kr,latin1 " Vim will try these encodings when open a file
 set termencoding=utf-8 " Defines how your keyboard encodes what you type
 set encoding=utf-8 " Sets how vim shall represent characters internally
 
@@ -44,8 +48,14 @@ set wildmenu
 " now we can hit tab to :find by partial match &
 " use * to make it fuzzy
 
+" vim vimdows
+set splitbelow
+set splitright
+
 " remap copy file to system clipboard
-nmap <F3> gg"+yG
+nmap <F3> gg"+yG``
+
+filetype plugin indent on
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if empty(glob('~/.vim/autoload/plug.vim'))
@@ -66,20 +76,20 @@ Plug 'mhinz/vim-signify'
 
 Plug 'tpope/vim-surround'
 
-Plug 'davidhalter/jedi-vim'
-" Plug 'Valloric/YouCompleteMe'
-" let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
-" " auto complete pane's color.
-" highlight PMenu ctermfg=0 ctermbg=242 guifg=black guibg=darkgrey
-" highlight PMenuSel ctermfg=242 ctermbg=8 guifg=darkgrey guibg=black
-" " close function prototype when autocomplete.
-" set completeopt=menu,menuone
-" let g:ycm_add_preview_to_completeopt = 0
-" " input 2 letters will trigger complete automaticly.
-" let g:ycm_semantic_triggers =  {
-"             \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
-"             \ 'cs,lua,javascript': ['re!\w{2}'],
-"             \ }
+"Plug 'davidhalter/jedi-vim'
+Plug 'Valloric/YouCompleteMe'
+let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
+" auto complete pane's color.
+highlight PMenu ctermfg=0 ctermbg=242 guifg=black guibg=darkgrey
+highlight PMenuSel ctermfg=242 ctermbg=8 guifg=darkgrey guibg=black
+" close function prototype when autocomplete.
+set completeopt=menu,menuone
+let g:ycm_add_preview_to_completeopt = 0
+" input 2 letters will trigger complete automaticly.
+let g:ycm_semantic_triggers =  {
+            \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
+            \ 'cs,lua,javascript': ['re!\w{2}'],
+            \ }
 
 " Insert or delete brackets, parens, quotes in pair.
 Plug 'jiangmiao/auto-pairs'
@@ -97,7 +107,7 @@ let g:UltiSnipsListSnippets="<c-l>"
 """ python indentLine
 Plug 'Yggdroot/indentLine'
 let g:indentLine_color_term = 239
-let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+let g:indentLine_char_list = ['|', '¦']
 
 
 "" nerdtree
@@ -164,6 +174,12 @@ let g:airline_theme='simple'
 let g:airline_powerline_fonts=1
 let g:Powerline_symbols='unicode'
 
+Plug 'sickill/vim-monokai'
+
+Plug 'tomasr/molokai'
+let g:rehash256 = 1
+
+
 
 " Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
 " Plug 'junegunn/vim-easy-align'
@@ -196,3 +212,5 @@ let g:Powerline_symbols='unicode'
 " Initialize plugin system
 call plug#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" colorscheme monokai
+colorscheme molokai

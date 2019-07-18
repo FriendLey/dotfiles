@@ -2,6 +2,8 @@ set -g default-terminal "screen-256color"
 
 set -g history-limit 20000
 
+set-option -g escape-time 0
+
 # for accustom panel/window name.
 set-option -g allow-rename off
 set -wg automatic-rename off
@@ -31,10 +33,10 @@ bind -r K resize-pane -U 2
 bind -r L resize-pane -R 2
 
 # move to different panes
-bind -r h select-pane -L 
-bind -r l select-pane -R
-bind -r j select-pane -D
-bind -r k select-pane -U
+bind h select-pane -L 
+bind l select-pane -R
+bind j select-pane -D
+bind k select-pane -U
 
 # create session
 bind C-c new-session
@@ -49,5 +51,5 @@ bind -n C-l send-keys C-l \; run 'sleep 0.1' \; clear-history
 set -g set-titles on
 set -g set-titles-string '#h ❐ #S ● #I #W'
 
-source-file $HOME/.dotfiles/tmux/solarized.tmuxstatusline
-# source-file $HOME/.dotfiles/tmux/powerlinelike.tmuxstatusline
+# source-file $HOME/.dotfiles/tmux/solarized.tmuxstatusline
+source-file $HOME/.dotfiles/tmux/powerlinelike.tmuxstatusline

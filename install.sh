@@ -3,10 +3,10 @@
 export DOTFILES="$HOME/.dotfiles"
 
 if [[ -d "$DOTFILES" ]]; then
-  echo "Symlinking DOTFILES from $DOTFILES"
+    echo "Symlinking DOTFILES from $DOTFILES"
 else
-  echo "$DOTFILES does not exist"
-  exit 1
+    echo "$DOTFILES does not exist"
+    exit 1
 fi
 
 # pre install
@@ -29,17 +29,17 @@ if which brew >/dev/null;then
         for var in $@
 	do
 	    if ! which ${dic[$var]} > /dev/null; then
-		echo "Installing ${var}"
-		brew install ${var}
-	    fi
-        done
+            echo "Installing ${var}"
+            brew install ${var}
+        fi
+    done
     }
 
     export HOMEBREW_NO_AUTO_UPDATE=1
     echo "You are using HomeBrew tool"
     brew_install "macvim" "zsh" "tmux"
-    if [[ `grep -c "mvim" $DOTFILES/zsh/zshrc.symlink` -eq 0 ]]; then
-	echo 'alias vim="mvim -v"' >> $DOTFILES/zsh/zshrc.symlink
+    if [[ `grep -c "alias vim=mvim -v" $DOTFILES/zsh/zshrc.symlink` -eq 0 ]]; then
+	    echo 'alias vim="mvim -v"' >> $DOTFILES/zsh/zshrc.symlink
     fi
 fi
 
