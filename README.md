@@ -2,8 +2,9 @@
 
 # Prerequisites
 
-- bash ( >= 4.3 )
-- vim ( >= 8.0 )
+ - vim ( >= 8.0 )
+ - zsh
+ - tmux
 
 # Installation
 
@@ -12,6 +13,12 @@ $ git clone https://github.com/FriendLey/dotfiles.git ~/.dotfiles
 $ cd ~/.dotfiles
 $ ./install.sh
 ```
+
+# [Install YCM](https://github.com/ycm-core/YouCompleteMe)
+
+ - 不能使用anaconda中的clang
+
+# [install powerline font](https://github.com/powerline/fonts)
 
 # 索引
 
