@@ -3,8 +3,8 @@
 # Prerequisites
 
  - vim ( >= 8.0 )
- - zsh
- - tmux
+ - zsh ( >= 5.1.1 )
+ - tmux ( >= 2.1 )
 
 # Installation
 

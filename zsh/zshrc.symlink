@@ -77,7 +77,6 @@ ZSH_THEME="agnoster"
 plugins=(
   git
   autojump
-  proxy
   vi-mode
 )
 
@@ -127,9 +126,17 @@ export DOTFILES=$HOME/.dotfiles
 export DOTFILES_ZSH=$DOTFILES/zsh
 
 source "$DOTFILES_ZSH/tmux.zsh"
-alias vim="mvim -v"
+# alias vim="mvim -v"
 alias g++="g++ --std=c++11"
 
 if [ -f "$DOTFILES_ZSH/private.zsh" ]; then
   source "$DOTFILES_ZSH/private.zsh"
+fi
+
+if [ -d "$HOME/local/" ]; then
+  export PATH="$HOME/local/bin;$PATH"
+fi
+
+if [ -f "/etc/profile.d/autojump.sh" ]; then
+  source "/etc/profile.d/autojump.sh"
 fi
