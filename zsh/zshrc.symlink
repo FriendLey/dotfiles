@@ -126,7 +126,7 @@ export DOTFILES=$HOME/.dotfiles
 export DOTFILES_ZSH=$DOTFILES/zsh
 
 source "$DOTFILES_ZSH/tmux.zsh"
-# alias vim="mvim -v"
+alias vim="mvim -v"
 alias g++="g++ --std=c++11"
 
 if [ -f "$DOTFILES_ZSH/private.zsh" ]; then
@@ -134,7 +134,7 @@ if [ -f "$DOTFILES_ZSH/private.zsh" ]; then
 fi
 
 if [ -d "$HOME/local/" ]; then
-  export PATH="$HOME/local/bin;$PATH"
+  export PATH="$HOME/local/bin:$PATH"
 fi
 
 if [ -f "/etc/profile.d/autojump.sh" ]; then

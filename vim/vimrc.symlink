@@ -150,15 +150,23 @@ let g:gutentags_ctags_tagfile = '.tags'
 " A list of arguments to pass to `ctags`, Defaults to `[]`.
 let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
 let g:gutentags_ctags_extra_args += ['--output-format=e-ctags'] " if you use universal ctags
-" let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
-" let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
+let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
 
-"" gtags
+" quickfix ctrl-w z
+
+" Plug 'skywind3000/vim-preview'
+" autocmd FileType qf nnoremap <silent><buffer> p :PreviewQuickfix<cr>
+" autocmd FileType qf nnoremap <silent><buffer> P :PreviewClose<cr>
+" noremap <Leader>u :PreviewScroll -1<cr>
+" noremap <leader>d :PreviewScroll +1<cr>
+
+" gtags
 let g:gutentags_auto_add_gtags_cscope = 0
 " If built-in parser exists for the target, it is used. Else if pygments parser exists it is used.
 " built-in parser includes: C, C++, yacc, java, PHP and Assembly source files.
 let $GTAGSLABEL = 'native-pygments'
-" let $GTAGSCONF = '/usr/local/share/gtags/gtags.conf'
+let $GTAGSCONF = '/usr/local/share/gtags/gtags.conf'
 " Specifies a directory in which to create all the tags files, instead of writing them at the root of each
 " project. This is handy to keep tags files from polluting many directories all across your computer.
 let s:vim_tags = expand('~/.cache/tags')

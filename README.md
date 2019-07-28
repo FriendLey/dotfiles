@@ -90,3 +90,21 @@ let g:gutentags_cache_dir = s:vim_tags
 
 
 
+# Mac initialization
+
+```shell
+$ xcode-select --install
+```
+
+- [Install Homebrew](https://brew.sh/) 
+
+```shell
+$ brew cask install osxfuse
+$ brew install sshfs
+$ brew install tmux
+$ brew install 
+$ brew cask install iterm2
+$ brew install autojump
+$ brew install cmake
+```
+
