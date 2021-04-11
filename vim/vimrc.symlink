@@ -8,21 +8,34 @@ syntax on
 set number " display line number
 set relativenumber " display relative line number
 
-" set tab & space 4
-set tabstop=4 " Show existing tab with 4 spaces width
-set shiftwidth=4 " When indenting with '>', use 4 spaces width
+" set tab & space 2
+set tabstop=2 " Show existing tab with 4 spaces width
+set shiftwidth=2 " When indenting with '>', use 4 spaces width
 set expandtab " On pressing tab, insert 4 spaces.
+" more powerful backspace
+set backspace=2
+set smarttab
+
+" indent settings
+set autoindent
+set smartindent
+set cindent
+set cinoptions=g1,h1,i4,l1,m1,N-s,t0,W4,+2s,:2,(0
+
+" support gnu syntaxt
+let c_gnu = 1
+" show error for mixed tab-space
+let c_space_errors = 1
+" don't show gcc statement expression ({x, y;}) as error
+let c_no_curly_error = 1
 
 
 " use shallow color mark current line and column.
 autocmd InsertLeave * set nocul nocuc
 autocmd InsertEnter * set cul cuc
 
-" more powerful backspace
-set backspace=2
-
-" display left column
-set signcolumn=yes " vim version >= 7.4.2201
+" setup a line length marker
+set colorcolumn=81
 
 set showmatch
 
@@ -52,12 +65,17 @@ set wildmenu
 set splitbelow
 set splitright
 
+cnoremap <C-p> <Up>
+cnoremap <C-n> <Down>
+
+set history=2000
+
 " remap copy file to system clipboard
 nmap <F3> gg"+yG``
 
 filetype plugin indent on
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -69,156 +87,314 @@ endif
 " - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('~/.vim/plugged')
 
-" Show error & warning message.
-Plug 'w0rp/ale'
-" Show diff between current and git repo.
-Plug 'mhinz/vim-signify'
-
-Plug 'tpope/vim-surround'
-
-"Plug 'davidhalter/jedi-vim'
-Plug 'Valloric/YouCompleteMe'
-let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
-" auto complete pane's color.
-highlight PMenu ctermfg=0 ctermbg=242 guifg=black guibg=darkgrey
-highlight PMenuSel ctermfg=242 ctermbg=8 guifg=darkgrey guibg=black
-" close function prototype when autocomplete.
-set completeopt=menu,menuone
-let g:ycm_add_preview_to_completeopt = 0
-" input 2 letters will trigger complete automaticly.
-let g:ycm_semantic_triggers =  {
-            \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
-            \ 'cs,lua,javascript': ['re!\w{2}'],
-            \ }
+" auto-completion, auto-jump
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'pappasam/coc-jedi', { 'do': 'yarn install --frozen-lockfile && yarn build' }
 
 " Insert or delete brackets, parens, quotes in pair.
 Plug 'jiangmiao/auto-pairs'
 
-" vim snippets.
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
-let g:UltiSnipsExpandTrigger="<c-j>"
-let g:UltiSnipsJumpForwardTrigger="<c-f>"
-let g:UltiSnipsJumpBackwardTrigger="<c-b>"
-let g:UltiSnipsListSnippets="<c-l>"
-
-" Make sure you use single quotes
-
-""" python indentLine
-Plug 'Yggdroot/indentLine'
-let g:indentLine_color_term = 239
-let g:indentLine_char_list = ['|', '¦']
-
-
-"" nerdtree
-Plug 'scrooloose/nerdtree'
-" open a NERDTree automatically when vim starts up
-autocmd VimEnter * NERDTree
-" open a NERDTree automatically when vim starts up if no files were specified
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-" open NERDTree automatically when vim starts up on opening a directory 
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
-" close vim if the only window left open is a NERDTree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-" map a specific key or shortcut to open NERDTree
-map <C-m> :NERDTreeToggle<CR>
-" make the curser in file window
-wincmd w
-autocmd VimEnter * wincmd w
-
-
-"""" vim-gutentags
-Plug 'ludovicchabant/vim-gutentags'
-" how Gutentags figures out the project a file belongs to
-let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
-
-""" ctags & gtags
-let g:gutentags_modules = []
-if executable('ctags')
-    let g:gutentags_modules += ['ctags']
-endif
-if executable('gtags-cscope') && executable('gtags')
-    let g:gutentags_modules += ['gtags_cscope']
-endif
-
-"" ctags
-set tags=./.tags;,.tags
-" Specifies the name of the tag file to create. This will be appended to the project's root.
-let g:gutentags_ctags_tagfile = '.tags'
-" A list of arguments to pass to `ctags`, Defaults to `[]`.
-let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
-let g:gutentags_ctags_extra_args += ['--output-format=e-ctags'] " if you use universal ctags
-let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
-let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
-
-" quickfix ctrl-w z
-
-" Plug 'skywind3000/vim-preview'
-" autocmd FileType qf nnoremap <silent><buffer> p :PreviewQuickfix<cr>
-" autocmd FileType qf nnoremap <silent><buffer> P :PreviewClose<cr>
-" noremap <Leader>u :PreviewScroll -1<cr>
-" noremap <leader>d :PreviewScroll +1<cr>
-
-" gtags
-let g:gutentags_auto_add_gtags_cscope = 0
-" If built-in parser exists for the target, it is used. Else if pygments parser exists it is used.
-" built-in parser includes: C, C++, yacc, java, PHP and Assembly source files.
-let $GTAGSLABEL = 'native-pygments'
-let $GTAGSCONF = '/usr/local/share/gtags/gtags.conf'
-" Specifies a directory in which to create all the tags files, instead of writing them at the root of each
-" project. This is handy to keep tags files from polluting many directories all across your computer.
-let s:vim_tags = expand('~/.cache/tags')
-if !isdirectory(s:vim_tags)
-   silent! call mkdir(s:vim_tags, 'p')
-endif
-let g:gutentags_cache_dir = s:vim_tags
-
-
+" airline
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 let g:airline_theme='simple'
 let g:airline_powerline_fonts=1
 let g:Powerline_symbols='unicode'
 
-Plug 'sickill/vim-monokai'
+Plug 'vim-scripts/DoxygenToolkit.vim'
 
-Plug 'tomasr/molokai'
-let g:rehash256 = 1
+Plug 'patstockwell/vim-monokai-tasty'
 
+Plug 'simeji/winresizer'
+" If you want to start window resize mode by `Ctrl+H`
+let g:winresizer_start_key = '<C-H>'
+" If you cancel and quit window resize mode by `z` (keycode 122)
+let g:winresizer_keycode_cancel = 122
+let g:winresizer_vert_resize = 2
+let g:winresizer_horiz_resize = 2
 
+" Show diff between current and git repo.
+Plug 'airblade/vim-gitgutter'
 
-" Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
-" Plug 'junegunn/vim-easy-align'
-
-" Any valid git URL is allowed
-" Plug 'https://github.com/junegunn/vim-github-dashboard.git'
-
-" Multiple Plug commands can be written in a single line using | separators
-" Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-
-" On-demand loading
-" Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-" Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
-
-" Using a non-master branch
-" Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
-
-" Using a tagged release; wildcard allowed (requires git 1.9.2 or above)
-" Plug 'fatih/vim-go', { 'tag': '*' }
-
-" Plugin options
-" Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
-
-" Plugin outside ~/.vim/plugged with post-update hook
-" Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-
-" Unmanaged plugin (manually installed and updated)
-" Plug '~/my-prototype-plugin'
-
-" Initialize plugin system
 call plug#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" colorscheme monokai
-colorscheme molokai
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"" Plugin Configuration
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"" coc.nvim
+let g:coc_disable_startup_warning = 1
+" TextEdit might fail if hidden is not set.
+set hidden
+
+" Some servers have issues with backup files, see #649.
+set nobackup
+set nowritebackup
+
+" Give more space for displaying messages.
+set cmdheight=2
+
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=200
+
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
+
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+if has("patch-8.1.1564")
+  " Recently vim can merge signcolumn and number column into one
+  set signcolumn=number
+else
+  set signcolumn=yes
+endif
+
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
+
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+
+" GoTo code navigation.
+" nmap <silent> <C-]> <Plug>(coc-definition)
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
+
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder.
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+" Applying codeAction to the selected region.
+" Example: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap keys for applying codeAction to the current buffer.
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Map function and class text objects
+" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+xmap if <Plug>(coc-funcobj-i)
+omap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap af <Plug>(coc-funcobj-a)
+xmap ic <Plug>(coc-classobj-i)
+omap ic <Plug>(coc-classobj-i)
+xmap ac <Plug>(coc-classobj-a)
+omap ac <Plug>(coc-classobj-a)
+
+" Remap <C-f> and <C-b> for scroll float windows/popups.
+" Note coc#float#scroll works on neovim >= 0.4.0 or vim >= 8.2.0750
+nnoremap <nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+nnoremap <nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+inoremap <nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+inoremap <nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+
+" NeoVim-only mapping for visual mode scroll
+" Useful on signatureHelp after jump placeholder of snippet expansion
+if has('nvim')
+  vnoremap <nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#nvim_scroll(1, 1) : "\<C-f>"
+  vnoremap <nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#nvim_scroll(0, 1) : "\<C-b>"
+endif
+
+" Use CTRL-S for selections ranges.
+" Requires 'textDocument/selectionRange' support of language server.
+nmap <silent> <C-s> <Plug>(coc-range-select)
+xmap <silent> <C-s> <Plug>(coc-range-select)
+
+" Add `:Format` command to format current buffer.
+command! -nargs=0 Format :call CocAction('format')
+
+" Add `:Fold` command to fold current buffer.
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+
+" Add (Neo)Vim's native statusline support.
+" NOTE: Please see `:h coc-status` for integrations with external plugins that
+" provide custom statusline: lightline.vim, vim-airline.
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" Mappings for CoCList
+" Show all diagnostics.
+nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions.
+nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
+" Show commands.
+nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document.
+nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols.
+nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list.
+nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+
+autocmd FileType python let b:coc_root_patterns = ['setup.py']
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" vim-monokai-tasty
+colorscheme vim-monokai-tasty
+
+" display left column
+" set signcolumn=yes " vim version >= 7.4.2201
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! SwitchSourceHeader()
+  "update!
+  if (expand ("%:e") == "cpp")
+    find %:t:r.h
+  else
+    find %:t:r.cpp
+  endif
+endfunction
+
+function! SwitchSourceHeaderVS()
+  "update!
+  if (expand ("%:e") == "cpp")
+    vs %:p:r.h
+  else
+    vs %:p:r.cpp
+  endif
+endfunction
+
+nmap ,e :call SwitchSourceHeader()<CR>
+
+nmap ,v :call SwitchSourceHeaderVS()<CR>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" 缩进格式修正：模板参数表，类初始化列表等
+function! FixCppIndent()
+    let l:cline_num = line('.')
+    let l:cline = getline(l:cline_num)
+    let l:pline_num = prevnonblank(l:cline_num - 1)
+    let l:pline = getline(l:pline_num)
+    while l:pline =~# '\(^\s*{\s*\|^\s*//\|^\s*/\*\|\*/\s*$\)'
+        let l:pline_num = prevnonblank(l:pline_num - 1)
+        let l:pline = getline(l:pline_num)
+    endwhile
+    let l:retv = cindent('.')
+    let l:pindent = indent(l:pline_num)
+    if l:pline =~# '^\s*template\s*<\s*$'
+        let l:retv = l:pindent + &shiftwidth
+    elseif l:pline =~# '^\s*template\s*<.*>\s*$'
+        let l:retv = l:pindent
+    elseif l:pline =~# '\s*typename\s*.*,\s*$'
+        let l:retv = l:pindent
+    elseif l:pline =~# '\s*typename\s*.*>\s*$'
+        let l:etv = l:pindent - &shiftwidth
+    elseif l:cline =~# '^\s*>\s*$'
+        let l:retv = l:pindent - &shiftwidth
+    elseif l:pline =~# '^\s\+: \S.*' " C++ initialize list
+        let l:retv = l:pindent + 2
+    elseif l:cline =~# '^\s*:\s*\w\+(' " C++ initialize list
+        let l:retv = l:pindent + 4
+    else
+        echo "No match"
+    endif
+    return l:retv
+endfunction
+autocmd FileType cpp nested setlocal indentexpr=FixCppIndent()
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" 保存时自动删除行尾多余的空白字符
+function! RemoveTrailingSpace()
+    if $VIM_HATE_SPACE_ERRORS != '0'
+        normal m`
+        silent! :%s/\s\+$//e
+        normal ``
+    endif
+endfunction
+autocmd BufWritePre * nested call RemoveTrailingSpace()
+
+" 修复不一致的换行符，统一采用 Unix 换行符(\n)
+function! FixInconsistFileFormat()
+    if &fileformat == 'unix'
+        silent! :%s/\r$//e
+    endif
+endfunction
+autocmd BufWritePre * nested call FixInconsistFileFormat()
+
+" 增加'CppLint'自定义命令，在冒号模式下输入:CppLint即可检查当前文件，也支持带文件名参数。
+" 检查结果支持 vim 的  QuickFix 模式，在不离开 vim 的情况下跳转到出错行方便，修正。
+function! CppLint(...)
+    let l:args = join(a:000)
+    if l:args == ""
+        let l:args = expand("%")
+        if l:args == ""
+            let l:args = '*'
+        endif
+    endif
+    let l:old_makeprg = &makeprg
+    setlocal makeprg=cpplint.py
+    execute "make " . l:args
+    let &makeprg=old_makeprg
+endfunction
+command! -complete=file -nargs=* CppLint call CppLint('<args>')
+
+if has('python')
+  map <C-K> :pyf $HOME/bin/clang-format.py<cr>
+  imap <C-K> <c-o>:pyf $HOME/bin/clang-format.py<cr>
+elseif has('python3')
+  map <C-K> :py3f $HOME/bin/clang-format.py<cr>
+  imap <C-K> <c-o>:py3f $HOME/bin/clang-format.py<cr>
+endif

@@ -1,0 +1,38 @@
+ZSH_THEME="agnoster"
+
+plugins=(
+  git
+#   autojump
+  vi-mode
+)
+
+function cd() {
+    new_directory="$*";
+    if [ $# -eq 0 ]; then 
+        new_directory=${HOME};
+    fi;
+    builtin cd "${new_directory}" && ls
+}
+
+function cgrep () {
+    grep -rin "$1" --include=\*.cpp --include=\*.h --include=\*.c
+}
+
+function pgrep () {
+    grep -rin "$1" --include=\*.py
+}
+
+export DOTFILES=$HOME/.dotfiles
+export DOTFILES_ZSH=$DOTFILES/zsh
+
+# tmux.
+. "$DOTFILES_ZSH/tmux.zsh"
+
+# private settings.
+if [ -f "$DOTFILES_ZSH/private.zsh" ]; then
+  . "$DOTFILES_ZSH/private.zsh"
+fi
+
+if [ -f "$HOME/.bashrc" ]; then
+  . "$HOME/.bashrc"
+fi
