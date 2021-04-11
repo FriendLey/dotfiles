@@ -1,21 +1,5 @@
 ![](./imgs/zsh_tmux_vim_screenshot.png)
 
-# Prerequisites
-
-1. [install oh my zsh](https://ohmyz.sh/)
-
-```
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-```
-
-2. `sudo yum install autojump`
-
-3. [install tmux](https://github.com/tmux/tmux/wiki)
-   - version = 3.1b
-   - download from [galaxy](http://galaxy4.net/repo/)
-   - rpm -ivh *.rpm
-
-
 # Installation
 
 ```bash
@@ -24,4 +8,15 @@ $ cd ~/.dotfiles
 $ ./install.sh
 ```
 
-# [install powerline font](https://github.com/powerline/fonts)
+# Initialization Step of Machine
+1. Install iTerm2
+2. Install HomeBrew
+3. Install oh my zsh
+
+   put `. ~/.dotfiles/zsh/customized_zsh.symlink` before `. $ZSH/oh-my-zsh.sh`
+
+4. Install tmux
+5. Install autojump
+6. Install [powerline fonts](https://github.com/powerline/fonts)
+7. Install [powerlevel10k](https://github.com/romkatv/powerlevel10k)
+8. `vim +PlugInstall +qall`
