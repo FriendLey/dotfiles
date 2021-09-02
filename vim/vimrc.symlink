@@ -398,3 +398,13 @@ elseif has('python3')
   map <C-K> :py3f $HOME/bin/clang-format.py<cr>
   imap <C-K> <c-o>:py3f $HOME/bin/clang-format.py<cr>
 endif
+
+" 为 vim 开启 true color (24 位颜色) 支持
+" https://lotabout.me/2018/true-color-for-tmux-and-vim/
+if has("termguicolors")
+  " fix bug for vim
+  set t_8f=[38;2;%lu;%lu;%lum
+  set t_8b=[48;2;%lu;%lu;%lum
+  " enable true color
+  set termguicolors
+endif
