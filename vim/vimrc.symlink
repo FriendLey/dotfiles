@@ -65,6 +65,11 @@ set wildmenu
 set splitbelow
 set splitright
 
+nnoremap k gk
+nnoremap gk k
+nnoremap j gj
+nnoremap gj j
+
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
 
@@ -116,6 +121,8 @@ let g:winresizer_horiz_resize = 2
 " Show diff between current and git repo.
 Plug 'airblade/vim-gitgutter'
 
+Plug 'honza/vim-snippets'
+
 call plug#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -154,8 +161,13 @@ endif
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
+" inoremap <silent><expr> <TAB>
+"       \ pumvisible() ? "\<C-n>" :
+"       \ <SID>check_back_space() ? "\<TAB>" :
+"       \ coc#refresh()
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
@@ -392,9 +404,38 @@ endfunction
 command! -complete=file -nargs=* CppLint call CppLint('<args>')
 
 if has('python')
-  map <C-K> :pyf $HOME/bin/clang-format.py<cr>
-  imap <C-K> <c-o>:pyf $HOME/bin/clang-format.py<cr>
+  map <c-n> :pyf $HOME/bin/clang-format.py<cr>
+  imap <c-n> <c-o>:pyf $HOME/bin/clang-format.py<cr>
 elseif has('python3')
-  map <C-K> :py3f $HOME/bin/clang-format.py<cr>
-  imap <C-K> <c-o>:py3f $HOME/bin/clang-format.py<cr>
+  map <c-n> :py3f $HOME/bin/clang-format.py<cr>
+  imap <c-n> <c-o>:py3f $HOME/bin/clang-format.py<cr>
 endif
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""" vim-snippets and ultisnips
+"" Trigger configuration. You need to change this to something other than <tab> if you use one of the following:
+"" - https://github.com/Valloric/YouCompleteMe
+"" - https://github.com/nvim-lua/completion-nvim
+"let g:UltiSnipsExpandTrigger="<c-j>"
+"let g:UltiSnipsJumpForwardTrigger="<c-k>"
+"let g:UltiSnipsJumpBackwardTrigger="<c-l>"
+"
+"" If you want :UltiSnipsEdit to split your window.
+"let g:UltiSnipsEditSplit="vertical"
+"
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" coc-snippets
+" Use <C-l> for trigger snippet expand.
+imap <C-l> <Plug>(coc-snippets-expand)
+" Use <C-j> for select text for visual placeholder of snippet.
+vmap <C-j> <Plug>(coc-snippets-select)
+" Use <C-j> for jump to next placeholder, it's default of coc.nvim
+let g:coc_snippet_next = '<c-j>'
+" Use <C-k> for jump to previous placeholder, it's default of coc.nvim
+let g:coc_snippet_prev = '<c-k>'
+" Use <C-j> for both expand and jump (make expand higher priority.)
+imap <C-j> <Plug>(coc-snippets-expand-jump)
+" Use <leader>x for convert visual selected code to snippet
+xmap <leader>x  <Plug>(coc-convert-snippet)
+

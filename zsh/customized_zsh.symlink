@@ -15,7 +15,19 @@ function cd() {
 }
 
 function cgrep () {
-    grep -rin "$1" --include=\*.cpp --include=\*.h --include=\*.c
+    grep -rin "$1" --include=\*.cpp --include=\*.h --include=\*.c --include=\*.cc
+}
+
+function bgrep () {
+    grep -rin "$1" --include=\*BUILD
+}
+
+function sgrep () {
+    grep -rin "$1" --include=\*.scala
+}
+
+function jgrep () {
+    grep -rin "$1" --include=\*.java
 }
 
 function pgrep () {
@@ -36,3 +48,5 @@ fi
 if [ -f "$HOME/.bashrc" ]; then
   . "$HOME/.bashrc"
 fi
+
+export HISTSIZE=100000
