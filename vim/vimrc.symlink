@@ -439,3 +439,12 @@ imap <C-j> <Plug>(coc-snippets-expand-jump)
 " Use <leader>x for convert visual selected code to snippet
 xmap <leader>x  <Plug>(coc-convert-snippet)
 
+" 为 vim 开启 true color (24 位颜色) 支持
+" https://lotabout.me/2018/true-color-for-tmux-and-vim/
+if has("termguicolors")
+  " fix bug for vim
+  set t_8f=[38;2;%lu;%lu;%lum
+  set t_8b=[48;2;%lu;%lu;%lum
+  " enable true color
+  set termguicolors
+endif
