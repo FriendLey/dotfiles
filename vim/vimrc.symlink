@@ -3,6 +3,13 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 "{{{
+
+" 讲空格设置为默认的前缀键
+let mapleader="\<space>"
+" 快速编辑和加载vimrc配置
+nnoremap <leader>ve :vsp $MYVIMRC<CR>
+nnoremap <leader>vs :source $MYVIMRC<CR>
+
 " close compatible mode which is for vi.
 set nocompatible
 
@@ -75,6 +82,14 @@ nnoremap k gk
 nnoremap gk k
 nnoremap j gj
 nnoremap gj j
+map gn :bn<cr>
+map gp :bp<cr>
+
+" :h window-resize
+nmap = :resize +5<CR>
+nmap - :resize -5<CR>
+nmap > :vertical res +5<CR>
+nmap < :vertical res -5<CR>
 
 " remap copy file to system clipboard
 nmap <F3> gg"+yG``
@@ -100,7 +115,9 @@ autocmd FileType proto set foldmethod=marker
 " FINDING FILES
 " search into subfiles
 " Provides tab-completion for all file-related tasks
-set path+=**
+set path+=./**,~/.dotfiles/**
+cabbrev vf vert sfind
+cabbrev tf tabfind
 " Display all matching files when we tab complete
 set wildmenu
 " now we can hit tab to :find by partial match &
@@ -322,29 +339,101 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 "" vim-airline configuration
 " {{{
-let g:airline_theme='simple'
+" let g:airline_theme='monokai_tasty'
+let g:airline_theme='molokai'
 let g:airline_powerline_fonts=1
 let g:Powerline_symbols='unicode'
+" Automatically displays all buffers when there's only one tab open.
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+
 " }}}
 
 Plug 'vim-scripts/DoxygenToolkit.vim'
 
 Plug 'patstockwell/vim-monokai-tasty'
 
-Plug 'simeji/winresizer'
-" {{{
-" If you want to start window resize mode by `Ctrl+H`
-let g:winresizer_start_key = '<C-H>'
-" If you cancel and quit window resize mode by `z` (keycode 122)
-let g:winresizer_keycode_cancel = 122
-let g:winresizer_vert_resize = 2
-let g:winresizer_horiz_resize = 2
-" }}}
-
+" Plug 'simeji/winresizer'
+" " {{{
+" " If you want to start window resize mode by `Ctrl+H`
+" let g:winresizer_start_key = '<C-M>'
+" " If you cancel and quit window resize mode by `z` (keycode 122)
+" let g:winresizer_keycode_cancel = 122
+" let g:winresizer_vert_resize = 3
+" let g:winresizer_horiz_resize = 3
+" " }}}
 " Show diff between current and git repo.
 Plug 'airblade/vim-gitgutter'
 
 Plug 'honza/vim-snippets'
+
+" Plug 'yggdroot/indentLine'
+" " {{{
+" let g:indent_guides_guide_size            = 1  " 指定对齐线的尺寸
+" let g:indent_guides_start_level           = 2  " 从第二层开始可视化显示缩进
+" let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+" " }}}
+
+Plug 'luochen1990/rainbow'
+" {{{
+let g:rainbow_active = 1
+" }}}
+
+Plug 'liuchengxu/vista.vim'
+" {{{
+" How each level is indented and what to prepend.
+" This could make the display more compact or more spacious.
+" e.g., more compact: ["▸ ", ""]
+" Note: this option only works for the kind renderer, not the tree renderer.
+let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
+
+" Executive used when opening vista sidebar without specifying it.
+" See all the avaliable executives via `:echo g:vista#executives`.
+let g:vista_default_executive = 'coc'
+
+" Set the executive for some filetypes explicitly. Use the explicit executive
+" instead of the default one for these filetypes when using `:Vista` without
+" specifying the executive.
+let g:vista_executive_for = {
+  \ 'cpp': 'coc',
+  \ 'php': 'vim_lsp',
+  \ }
+
+" Declare the command including the executable and options used to generate ctags output
+" for some certain filetypes.The file path will be appened to your custom command.
+" For example:
+let g:vista_ctags_cmd = {
+      \ 'haskell': 'hasktags -x -o - -c',
+      \ }
+
+" To enable fzf's preview window set g:vista_fzf_preview.
+" The elements of g:vista_fzf_preview will be passed as arguments to fzf#vim#with_preview()
+" For example:
+let g:vista_fzf_preview = ['right:50%']
+" " Ensure you have installed some decent font to show these pretty symbols, then you can enable icon for the kind.
+" let g:vista#renderer#enable_icon = 1
+"
+" " The default icons can't be suitable for all the filetypes, you can extend it as you wish.
+" let g:vista#renderer#icons = {
+" \   "function": "\uf794",
+" \   "variable": "\uf71b",
+" \  }
+nmap <F2> :Vista!!<CR>
+let g:vista_sidebar_position = 'vertical topleft'
+" }}}
+
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' },
+Plug 'junegunn/fzf.vim',
+" {{{
+
+" }}}
+
+" Plug 'roxma/vim-tmux-clipboard'
+" 将复制的内容也加到系统粘贴板上。
+" set clipboard+=unnamedplus
+" 使用tc将选中的内容复制到tmux的buffer里
+vnoremap <leader>tc y<cr>:call system("tmux load-buffer -", @0)<cr>gv
 
 call plug#end()
 
@@ -356,23 +445,32 @@ colorscheme vim-monokai-tasty
 " 其他小工具
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" 在.cpp打开对应的.h或者反过来；用,e在当前窗口打开；,v在右边新开一个窗口打开
+" 在.cpp/.cc打开对应的.h或者反过来；用,e在当前窗口打开；,v在右边新开一个窗口打开
 " {{{
 function! SwitchSourceHeader()
   "update!
-  if (expand ("%:e") == "cpp")
-    find %:t:r.h
+  let ext = expand ("%:e")
+  if ext == "cpp" || ext == "cc"
+    edit %:.:r.h
+  elseif filereadable(expand("%:.:r") . ".cpp")
+    edit %:.:r.cpp
   else
-    find %:t:r.cpp
+    edit %:.:r.cc
   endif
 endfunction
 
 function! SwitchSourceHeaderVS()
   "update!
-  if (expand ("%:e") == "cpp")
-    vs %:p:r.h
+  let ext = expand("%:e")
+  if (ext == "cpp" || ext == "cc")
+    " vs %:p:r.h
+    vs %:.:r.h
+  elseif filereadable(expand("%:.:r") . ".cpp")
+    " vs %:p:r.cpp
+    vs %:.:r.cpp
   else
-    vs %:p:r.cpp
+    " vs %:p:r.cc
+    vs %:.:r.cc
   endif
 endfunction
 

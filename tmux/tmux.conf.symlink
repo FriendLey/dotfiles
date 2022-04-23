@@ -52,10 +52,10 @@ bind - split-window -v -c "#{pane_current_path}"
 bind y setw synchronize-panes
 
 # Resize pane shortcuts
-bind -r H resize-pane -L 2
-bind -r J resize-pane -D 2
-bind -r K resize-pane -U 2
-bind -r L resize-pane -R 2
+bind -r C-h resize-pane -L 2
+bind -r C-j resize-pane -D 2
+bind -r C-k resize-pane -U 2
+bind -r C-l resize-pane -R 2
 
 # move to different panes
 bind h select-pane -L
@@ -77,3 +77,8 @@ set -g set-titles-string '#h ❐ #S ● #I #W'
 # source-file $HOME/.dotfiles/tmux/solarized.tmuxstatusline
 source-file $HOME/.dotfiles/tmux/powerlinelike.tmuxstatusline
 
+#  bind P paste-buffer
+#  bind-key -T copy-mode-vi v send-keys -X begin-selection
+#  bind-key -T copy-mode-vi y send-keys -X copy-selection
+#  bind-key -T copy-mode-vi r send-keys -X rectangle-toggle
+# set -g focus-events on
