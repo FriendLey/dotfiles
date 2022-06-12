@@ -70,3 +70,5 @@ fi
 
 
 export HISTSIZE=100000
+
+export PATH=$HOME/local/bin/:$PATH
